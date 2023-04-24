@@ -70,7 +70,7 @@ public class Solver {
      * Construct the shortest path from the starting configuration to the ending configuration
      * @param startNode the starting configuration
      * @param finishNode the ending configuration
-     * @return the shortest path found from the start to finish
+     * @return the shortest path found from the start to finish (in reverse)
      */
     public Collection<Configuration> constructPath(Configuration startNode, Configuration finishNode){
         Collection<Configuration> path = new LinkedList<>();
