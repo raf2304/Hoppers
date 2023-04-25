@@ -64,7 +64,7 @@ public class HoppersConfig implements Configuration{
         //copy the information
         for(int i = 0; i < this.row; i++){
             for(int j = 0; j < this.col; j++){
-                if(other.board[i][j] == "R"){
+                if(Objects.equals(other.board[i][j], "R")){
                     this.board[i][j] = ".";
                 }else{
                     this.board[i][j] = other.board[i][j];
@@ -82,22 +82,26 @@ public class HoppersConfig implements Configuration{
         //create a list of successors
         List<Configuration> successors = new LinkedList<Configuration>();
         HoppersConfig child = new HoppersConfig(this, this.cursorRow, this.cursorCol);
-        /*
-        * * spots can be either R or *
-        * - spots can be R, G, -
-        * G spots can be R, G, -
-         */
-        //if child is a "*"
-        if(!child.isSolution() && Objects.equals(child.board[this.cursorRow][this.cursorCol], "*")){
-            child.board[child.cursorRow][child.cursorCol] = "*";
+        //if we have not gone through each row, col on the board
+        if(!child.isSolution()){
+            //if child board at cursor row, col is a *, add * as a successor
+            if(!child.isSolution() && Objects.equals(child.board[this.cursorRow][this.cursorCol], "*")){
+                //add one configuration, a "*"
+                HoppersConfig child2 = new HoppersConfig(this, this.cursorRow, this.cursorCol);
+                successors.add(child2);
+            }else{
+                //if child board at cursor row, col is a "-" or "G", add "G" and "-" as successors
+                HoppersConfig child2 = new HoppersConfig(this, this.cursorRow, this.cursorCol);
+                child2.board[child.cursorRow][child.cursorCol] = "G";
+                successors.add(child2);
+                HoppersConfig child3 = new HoppersConfig(this, this.cursorRow, this.cursorCol);
+                child3.board[child.cursorRow][child.cursorCol] = "-";
+                successors.add(child2);
+            }
+            //each spot can be an R, so add the child with "R" at cursor row, col for each successor
+            child.board[child.cursorRow][child.cursorCol] = "R";
             successors.add(child);
-            //add two configurations. One is a "*", one is R
-            HoppersConfig child2 = new HoppersConfig(this, this.cursorRow, this.cursorCol);
-            child2.board[child.cursorRow][child.cursorCol] = "R";
-            successors.add(child2);
-
         }
-
         return successors;
     }
     /**
@@ -106,10 +110,7 @@ public class HoppersConfig implements Configuration{
      */
     @Override
     public boolean isSolution() {
-        if((this.cursorRow == this.row) && (this.cursorCol == this.col)){
-            return true;
-        }
-        return false;
+        return (this.cursorRow == this.row) && (this.cursorCol == this.col);
     }
 
     /**
