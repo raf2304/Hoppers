@@ -26,7 +26,7 @@ public class HoppersConfig implements Configuration{
      */
     public HoppersConfig(String filename) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(filename));
-        //the first line will contrain the rows/cols of the grid
+        //the first line will contain the rows/cols of the grid
         String[] rowsCols = br.readLine().split(" ");
         this.row = Integer.parseInt(rowsCols[0]);
         this.col = Integer.parseInt(rowsCols[1]);
@@ -45,11 +45,9 @@ public class HoppersConfig implements Configuration{
     /**
      * Create a copy config
      * @param other configuration to copy from
-     * @param row row of cursor
-     * @param col col of cursor
      */
     public HoppersConfig(HoppersConfig other){
-        //copy over size
+        //copy over the size
         this.col = other.col;
         this.row = other.row;
         //create the new board with row and col
@@ -192,9 +190,9 @@ public class HoppersConfig implements Configuration{
     }
 
     /**
-     * Check if this HoppersCOnfig is equal to object other
+     * Check if this HoppersConfig is equal to object other
      * @param other object to compare
-     * @return true if other is a HopperConfig and each row/col value is the same and they are the same size
+     * @return true if other is a HopperConfig and each row/col value is the same, and they are the same size
      */
     @Override
     public boolean equals(Object other){
