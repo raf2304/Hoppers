@@ -34,10 +34,15 @@ public class Hoppers {
         //create a hoppers config
         HoppersConfig hoppersConfig = new HoppersConfig(args[0]);
         //create a solver object
-        Solver solver = new Solver();
+        //Solver solver = new Solver();
         //start solving
-        Collection<Configuration> path = solver.solve(hoppersConfig);
+        Collection<Configuration> path = hoppersConfig.getSuccessors();
+        for (Configuration config: path
+        ) {
+            System.out.println(config.toString() + "\n");
+        }
 
+        /*
         System.out.println("Total Configs: " + solver.getTotalConfigs());
         System.out.print("Unique Configs: " + solver.getUniqueConfigs());
         if(path != null){
@@ -51,6 +56,6 @@ public class Hoppers {
             System.out.println(pathStr);
         }else{
             System.out.println("\nNo solution");
-        }
+        }*/
     }
 }
