@@ -48,7 +48,7 @@ public class HoppersConfig implements Configuration{
      * @param row row of cursor
      * @param col col of cursor
      */
-    public HoppersConfig(HoppersConfig other, int row, int col){
+    public HoppersConfig(HoppersConfig other){
         //copy over size
         this.col = other.col;
         this.row = other.row;
@@ -62,14 +62,6 @@ public class HoppersConfig implements Configuration{
         }
     }
 
-    /**
-     is this value equal to the goal value? Are we at the last possible value?
-     @return if this value equals the ending value
-     */
-    @Override
-    public boolean isSolution() {
-        return false;
-    }
     /**
      * @return list of successors, valid and not valid
      */
@@ -104,7 +96,7 @@ public class HoppersConfig implements Configuration{
         //hold successors generated
         Collection<Configuration> successors = new ArrayList<>();
         //get frog value at location
-        String frog = this.board[r][c];
+        String frog = config.board[r][c];
         //for each possible location, check if it is valid and if there is a frog that
         //is being passed over to get to that location
         //lists contain all possible row/col values to check
@@ -121,7 +113,7 @@ public class HoppersConfig implements Configuration{
             int colNumEmpty = frogColCheck.remove(0);
             if(isValid(r+rowNumFrog,c+colNumFrog) && frogCheck(r+rowNumEmpty,c+colNumEmpty)) {
                 //create a new HoppersConfig
-                HoppersConfig successor= new HoppersConfig(this, this.row, this.col);
+                HoppersConfig successor= new HoppersConfig(config);
                 successor.board[r + rowNumEmpty][c+colNumEmpty] = ".";
                 successor.board[r + rowNumFrog][c + colNumFrog] = frog;
                 successor.board[r][c]=".";
@@ -163,7 +155,7 @@ public class HoppersConfig implements Configuration{
         //hold successors generated
         Collection<Configuration> successors = new ArrayList<>();
         //get frog value at location
-        String frog = this.board[r][c];
+        String frog = config.board[r][c];
         //for each possible location, check if it is valid and if there is a frog that
         //is being passed over to get to that location
         //lists contain all possible row/col values to check
@@ -180,7 +172,7 @@ public class HoppersConfig implements Configuration{
             int colNumEmpty = frogColCheck.remove(0);
             if(isValid(r+rowNumFrog,c+ colNumFrog) && frogCheck(r+rowNumEmpty,c+colNumEmpty)) {
                 //create a new HoppersConfig
-                HoppersConfig successor= new HoppersConfig(this, this.row, this.col);
+                HoppersConfig successor= new HoppersConfig(config);
                 successor.board[r + rowNumEmpty][c + colNumEmpty] = ".";
                 successor.board[r + rowNumFrog][c + colNumFrog] = frog;
                 successor.board[r][c]=".";
@@ -223,6 +215,20 @@ public class HoppersConfig implements Configuration{
         return false;
     }
 
+    /**
+     *
+     * @return hashCode of the board
+     */
+    @Override
+    public int hashCode(){
+        return Arrays.deepHashCode(this.board);
+    }
+
+    /**
+     *
+     * @return the string representation of the configuration
+     */
+    @Override
     public String toString(){
         String boardStr = "";
         for(int i = 0; i < this.row; i++){
@@ -232,6 +238,24 @@ public class HoppersConfig implements Configuration{
             boardStr += "\n";
         }
         return boardStr;
+    }
+
+    /**
+     * A config is a solution when one red frog is on the board
+     * and every other frog is gone
+     * @return true if there is one red frog, false otherwise
+     */
+    @Override
+    public boolean isSolution(){
+        for(int i = 0; i < this.row; i++){
+            for(int j = 0; j < this.col; j++){
+                //if there are any green frogs this is not a solution
+                if(Objects.equals(this.board[i][j], "G")){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }
