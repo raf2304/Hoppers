@@ -6,13 +6,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-/**
- * create each move for each frog
- * choose which ones are valid
- * based on which R/G is two away from
- * original R/G
- * when moving R/G, change row/col-1 to a -
- */
 
 /**
  * The representation of a hopper configuration
@@ -67,19 +60,6 @@ public class HoppersConfig implements Configuration{
                 this.board[i][j] = other.board[i][j];
             }
         }
-    }
-
-    /**
-     * Check if the configuration is a valid configuration when compared to this
-     * @param config the configuration to check
-     * @return true if valid config, false otherwise
-     */
-    public boolean isValid(HoppersConfig config){
-        //is R two away from the original location?
-        //is there one R on the board
-        //is a green frog removed
-        //has one green frog been removed
-        return false;
     }
 
     /**
@@ -216,16 +196,31 @@ public class HoppersConfig implements Configuration{
      */
     @Override
     public Collection<Configuration> getNeighbors() {
-        //list to hold each neighbor
-        Collection<Configuration> successors = new ArrayList<>();
-        //get all options
-        //for each row, col if it is a R or G check every move
-        //even spot, there are 8 moves
-        //odd spots there are 4 moves
-        //add each to list of successors
-        //if the successor is valid, add it to the list of neighbors
-        Collection<Configuration> neighbors = new ArrayList<>();
-        return neighbors;
+        return this.getSuccessors();
+    }
+
+    /**
+     * Check if this HoppersCOnfig is equal to object other
+     * @param other object to compare
+     * @return true if other is a HopperConfig and each row/col value is the same and they are the same size
+     */
+    @Override
+    public boolean equals(Object other){
+        if(other instanceof HoppersConfig){
+            //if they are the same size
+            if(this.row == ((HoppersConfig) other).row && this.col == ((HoppersConfig) other).col) {
+                for (int i = 0; i < this.row; i++) {
+                    for (int j = 0; j < this.col; j++) {
+                        //if the item at row, col is not equal then they are not the same
+                        if (!Objects.equals(this.board[i][j], ((HoppersConfig) other).board[i][j])) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     public String toString(){
