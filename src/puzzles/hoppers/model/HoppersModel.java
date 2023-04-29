@@ -3,7 +3,6 @@ package puzzles.hoppers.model;
 import puzzles.common.Observer;
 import puzzles.common.solver.Configuration;
 import puzzles.common.solver.Solver;
-import puzzles.hoppers.ptui.HoppersPTUI;
 
 import java.io.IOException;
 import java.util.*;
