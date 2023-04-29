@@ -224,10 +224,9 @@ public class HoppersConfig implements Configuration{
 
     /**
      *
-     * @return the string representation of the configuration
+     * @return the string representation of the configuration, with row/col numbers
      */
-    @Override
-    public String toString(){
+    public String displayBoard(){
         String boardStr = "   ";
         for(int i = 0; i < this.col; i++){
            boardStr += i + " ";
@@ -242,6 +241,20 @@ public class HoppersConfig implements Configuration{
                 if(j == 0){
                     boardStr += i + "| ";
                 }
+                boardStr += this.board[i][j] + " ";
+            }
+            boardStr += "\n";
+        }
+        return boardStr;
+    }
+    /**
+     * @return the string representation of the configuration
+     */
+    @Override
+    public String toString(){
+        String boardStr = "";
+        for(int i = 0; i < this.row; i++){
+            for(int j = 0; j < this.col; j++){
                 boardStr += this.board[i][j] + " ";
             }
             boardStr += "\n";

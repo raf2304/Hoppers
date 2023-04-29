@@ -35,7 +35,7 @@ public class HoppersPTUI implements Observer<HoppersModel, String> {
     public void update(HoppersModel model, String data) {
         // for demonstration purposes
         System.out.println(data);
-        System.out.println(model);
+        System.out.println(model.getCurrentConfig().displayBoard());
     }
 
     /**

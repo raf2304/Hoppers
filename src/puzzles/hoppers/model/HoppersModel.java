@@ -72,7 +72,6 @@ public class HoppersModel {
             if(path != null){
                 Object[] arrPath = path.toArray();
                 this.currentConfig = (HoppersConfig)arrPath[arrPath.length - 2];
-                System.out.println(this.currentConfig.toString() + "\n");
                 this.alertObservers( "Next step!");
 
             }else{
@@ -151,8 +150,6 @@ public class HoppersModel {
                 selectFrom = null;
                 selectTo = null;
                 this.alertObservers("Not a valid move. Selection cancelled.");
-            }else{
-                System.out.println(this.currentConfig.toString());
             }
         }else{
             this.alertObservers("Current board is a solution!");
@@ -181,7 +178,6 @@ public class HoppersModel {
     public void reset() throws IOException {
         this.currentConfig = new HoppersConfig(this.filename);
         System.out.println("Loaded: " + filename);
-        System.out.println(this.currentConfig.toString() + "\n");
         this.alertObservers( "Puzzle reset!");
     }
 
