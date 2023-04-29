@@ -58,7 +58,7 @@ public class HoppersModel {
     {
         //check if this current configuration is a solution
         if(this.currentConfig.isSolution()){
-            System.out.println("\nPuzzle already solved!");
+            this.alertObservers("\nPuzzle already solved!");
         }else{
             //create a solver object
             Solver solver = new Solver();
@@ -68,11 +68,11 @@ public class HoppersModel {
             if(path != null){
                 Object[] arrPath = path.toArray();
                 this.currentConfig = (HoppersConfig)arrPath[arrPath.length - 2];
-                System.out.println(this.currentConfig.toString() + "\nNext step!");
+                this.alertObservers(this.currentConfig.toString() + "\nNext step!");
 
             }else{
                 //no path, indicate there is no solution
-                System.out.println("\nNo solution");
+                this.alertObservers("\nNo solution");
             }
         }
 
@@ -84,7 +84,7 @@ public class HoppersModel {
     public void load(String filename){
         try {
             this.currentConfig = new HoppersConfig(filename);
-            System.out.println("Loaded: " + filename);
+            this.alertObservers("Loaded: " + filename);
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
@@ -107,12 +107,12 @@ public class HoppersModel {
                     selectFrom = new int[2];
                     selectFrom[0] = r;
                     selectFrom[1] = c;
-                    System.out.println("Selected (" + r + ", " + c + ").");
+                    this.alertObservers("Selected (" + r + ", " + c + ").");
 
                 }else if((Objects.equals(value, ".") || Objects.equals(value, "*")) && selectFrom == null){
                     //if the first selection is a "." or "*", inform player there is no frog at that location
                     valid = false;
-                    System.out.print("No frog at (" + r + ", " + c + ").");
+                    this.alertObservers("No frog at (" + r + ", " + c + ").");
                 }else if(Objects.equals(value, ".") && selectFrom != null){
                     //if select from is set and the selection is a valid move spot
                     selectTo = new int[2];
@@ -121,7 +121,7 @@ public class HoppersModel {
                     //check if the move is a valid move, is the difference two
                     if(Math.abs(selectTo[0]-selectFrom[0]) == 2){
                         if(Math.abs(selectTo[1]-selectFrom[1]) == 2){
-                            System.out.println("Jumped from (" + selectFrom[0] + ", " + selectFrom[1] + ") to (" + r + ", " + c + ").");
+                            this.alertObservers("Jumped from (" + selectFrom[0] + ", " + selectFrom[1] + ") to (" + r + ", " + c + ").");
                             //make the move and update the board
                             makeMove();
                             selectFrom = null;
@@ -129,26 +129,26 @@ public class HoppersModel {
                         }
                     }else{
                         valid = false;
-                        System.out.print("The spot at (" + r + ", " + c + ") is not two away from original selection.");
+                        this.alertObservers("The spot at (" + r + ", " + c + ") is not two away from original selection.");
                     }
                 }else if(!Objects.equals(value, ".") && selectFrom != null){
                     //if the next selection is not a valid moving spot, inform the player
                     valid = false;
-                    System.out.print("The spot at (" + r + ", " + c + ") is not a valid move. Either there is a frog, or the spot is invalid.");
+                    this.alertObservers("The spot at (" + r + ", " + c + ") is not a valid move. Either there is a frog, or the spot is invalid.");
                 }
             }else{
                 valid = false;
-                System.out.print("The coordinates chosen are off the board. Selection cancelled.");
+                this.alertObservers("The coordinates chosen are off the board. Selection cancelled.");
             }
             if(!valid){
                 selectFrom = null;
                 selectTo = null;
-                System.out.println(" Selection cancelled.");
+                this.alertObservers(" Selection cancelled.");
             }else{
-                System.out.print(this.currentConfig.toString());
+                this.alertObservers(this.currentConfig.toString());
             }
         }else{
-            System.out.println("Current board is a solution!");
+            this.alertObservers("Current board is a solution!");
         }
 
 
@@ -170,9 +170,8 @@ public class HoppersModel {
      */
     public void reset() throws IOException {
         this.currentConfig = new HoppersConfig(this.filename);
-        System.out.println("Loaded: " + filename);
-
-        System.out.println(this.currentConfig.toString() + "\nPuzzle reset!");
+        this.alertObservers("Loaded: " + filename);
+        this.alertObservers(this.currentConfig.toString() + "\nPuzzle reset!");
     }
 
     /**

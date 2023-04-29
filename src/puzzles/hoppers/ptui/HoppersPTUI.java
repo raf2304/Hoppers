@@ -44,13 +44,13 @@ public class HoppersPTUI implements Observer<HoppersModel, String> {
                 }else if(words[0].startsWith( "h" )) {
                     //hint next move
                     this.model.hint();
-                }else if(words[0].startsWith( "l" )) {
+                }else if(words[0].startsWith( "l" ) && words.length == 2) {
                     //load new puzzle file
                     this.model.load(words[1]);
                 }else if(words[0].startsWith( "r" )) {
                     //reset the game
                     this.model.reset();
-                }else if(words[0].startsWith( "s" )){
+                }else if(words[0].startsWith( "s" ) && words.length == 3){
                     this.model.select(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
                 }
                 else {
