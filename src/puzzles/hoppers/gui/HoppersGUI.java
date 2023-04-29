@@ -20,7 +20,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Objects;
-
+/**
+ * The representation of the hopper game as a GUI
+ *
+ * @author Ryleigh Fuller
+ */
 public class HoppersGUI extends Application implements Observer<HoppersModel, String> {
     /** The size of all icons, in square dimension */
     private final static int ICON_SIZE = 75;
@@ -44,7 +48,9 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
     private Stage stage;
     //the label for the state of the game
     private Label label;
+    //holds the buttons at their row, col locations
     private Node[][] boardArr;
+    //holds the current filename
     private String filename;
 
 
@@ -63,6 +69,14 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
 
     }
 
+    /**
+     * Start the GUI
+     * @param stage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     * @throws Exception due to file
+     */
     @Override
     public void start(Stage stage) throws Exception {
         //the stage
@@ -108,6 +122,9 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         stage.show();
     }
 
+    /**
+     * Load a new file using FileChooser
+     */
     private void loadFile() {
         FileChooser chooser = new FileChooser();
         String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
@@ -116,6 +133,11 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         this.model.load(currentPath);
     }
 
+    /**
+     * Make the intitial board GUI based off
+     * items at the models current configuration
+     * @return GridPane of buttons representing each item on the board
+     */
     private GridPane makeBoard() {
         GridPane grid = new GridPane();
         //size of the board
@@ -132,6 +154,7 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
                 //represented by water
                 if(Objects.equals(board[r][c], "*")){
                     button.setGraphic(new ImageView(this.water));
+                    //set the property type to the symbol associated with the image for later access
                     button.getProperties().put("TYPE","*");
                 }else if(Objects.equals(board[r][c], ".")){
                     button.setGraphic(new ImageView(this.lillyPad));
@@ -155,10 +178,16 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
                 grid.add(button, c, r);
             }
         }
-
         return grid;
     }
 
+    /**
+     * Update the screen based on changes in the model
+     * @param hoppersModel the object that wishes to inform this object
+     *                about something that has happened.
+     * @param msg optional data the server.model can send to the observer
+     *
+     */
     @Override
     public void update(HoppersModel hoppersModel, String msg){
         //if a new file has been loaded, start again
@@ -182,6 +211,13 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         this.stage.sizeToScene();  // when a different sized puzzle is loaded
     }
 
+    /**
+     * Update the board
+     * Iterates through the models current configs row, col
+     * and compares to buttonArr row, col.
+     * A difference in the two changes the button image, type to represent the same character
+     * as the String in the models current config row, col
+     */
     private void updateBoard() {
         //size of the board
         int row = this.model.getCurrentConfig().getRow();
@@ -211,6 +247,10 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         }
     }
 
+    /**
+     * Main program
+     * @param args arguments passed through
+     */
     public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Usage: java HoppersPTUI filename");

@@ -5,16 +5,32 @@ import puzzles.hoppers.model.HoppersModel;
 
 import java.io.IOException;
 import java.util.Scanner;
-
+/**
+ * The representation of the hopper PTUI
+ *
+ * @author Ryleigh Fuller
+ */
 public class HoppersPTUI implements Observer<HoppersModel, String> {
     private HoppersModel model;
 
+    /**
+     * Initialize the PTUI
+     * @param filename the file to create a model with
+     * @throws IOException due to file
+     */
     public void init(String filename) throws IOException {
         this.model = new HoppersModel(filename);
         this.model.addObserver(this);
         displayHelp();
     }
 
+    /**
+     * Print out the model, data for viewing purposes
+     * @param model the object that wishes to inform this object
+     *                about something that has happened.
+     * @param data optional data the server.model can send to the observer
+     *
+     */
     @Override
     public void update(HoppersModel model, String data) {
         // for demonstration purposes
@@ -22,6 +38,10 @@ public class HoppersPTUI implements Observer<HoppersModel, String> {
         System.out.println(model);
     }
 
+    /**
+     * Display messages the computer is able to understand
+     * and exactly what they mean
+     */
     private void displayHelp() {
         System.out.println( "h(int)              -- hint next move" );
         System.out.println( "l(oad) filename     -- load new puzzle file" );
@@ -30,7 +50,11 @@ public class HoppersPTUI implements Observer<HoppersModel, String> {
         System.out.println( "r(eset)             -- reset the current game" );
     }
 
-
+    /**
+     * the representation of the game.
+     * reponds to used input based on the response outlined in displayHelp()
+     * @throws IOException due to this.model.reset
+     */
     public void run() throws IOException {
         Scanner in = new Scanner( System.in );
         for ( ; ; ) {
@@ -60,6 +84,10 @@ public class HoppersPTUI implements Observer<HoppersModel, String> {
         }
     }
 
+    /**
+     * The main function for HoppersPTUI
+     * @param args arguments passed through
+     */
     public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Usage: java HoppersPTUI filename");

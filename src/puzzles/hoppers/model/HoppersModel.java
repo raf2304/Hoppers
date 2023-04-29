@@ -6,7 +6,11 @@ import puzzles.common.solver.Solver;
 
 import java.io.IOException;
 import java.util.*;
-
+/**
+ * The representation of a hopper model
+ *
+ * @author Ryleigh Fuller
+ */
 public class HoppersModel {
     /** the collection of observers of this model */
     private final List<Observer<HoppersModel, String>> observers = new LinkedList<>();
@@ -157,6 +161,9 @@ public class HoppersModel {
 
     }
 
+    /**
+     * Adjust the board for the move being make in select()
+     */
     public void makeMove(){
         //get the frog (r or g) at the original selected spot
         String frog = this.currentConfig.getBoard()[selectFrom[0]][selectFrom[1]];
