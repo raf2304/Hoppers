@@ -1,5 +1,6 @@
 package puzzles.hoppers.gui;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,13 +9,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import puzzles.common.Observer;
 import puzzles.hoppers.model.HoppersModel;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 public class HoppersGUI extends Application implements Observer<HoppersModel, String> {
@@ -40,8 +44,7 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
     private Stage stage;
     //the label for the state of the game
     private Label label;
-    //the display for buttons on the board
-    private GridPane board;
+    private Node[][] boardArr;
     private String filename;
 
 
@@ -71,19 +74,31 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         this.label = new Label("Loaded " + this.filename);
         this.label.setAlignment(Pos.CENTER);
         //the playing board
-        this.board = makeBoard();
-        //the buttons
+        GridPane board = makeBoard();
+        //the buttons load, reset, hint
         HBox btns = new HBox();
         Button load = new Button("Load");
-        load.setOnAction(event -> loadFile());
+        load.setOnAction(event -> {
+            try {
+                loadFile();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
         Button reset = new Button("Reset");
-        load.setOnAction(event -> resetBoard());
+        reset.setOnAction(event -> {
+            try {
+                this.model.reset();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         Button hint = new Button("Hint");
         btns.setAlignment(Pos.CENTER);
-        load.setOnAction(event -> hint());
+        hint.setOnAction(event -> this.model.hint());
         btns.getChildren().addAll(load, reset, hint);
         //add to VBox
-        screen.getChildren().addAll(this.label, this.board, btns);
+        screen.getChildren().addAll(this.label, board, btns);
         //add VBox to scene
         Scene scene = new Scene(screen);
         stage.setScene(scene);
@@ -93,13 +108,12 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         stage.show();
     }
 
-    private void hint() {
-    }
-
-    private void resetBoard() {
-    }
-
     private void loadFile() {
+        FileChooser chooser = new FileChooser();
+        String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
+        currentPath += File.separator + "data" + File.separator + "hoppers";
+        chooser.setInitialDirectory(new File(currentPath));
+        this.model.load(currentPath);
     }
 
     private GridPane makeBoard() {
@@ -109,6 +123,7 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         int col = this.model.getCurrentConfig().getCol();
         //the game board of the current configuration
         String[][] board = this.model.getCurrentConfig().getBoard();
+        this.boardArr = new Node[row][col];
 
         for(int r = 0; r < row; r++){
             for(int c = 0; c < col; c++){
@@ -117,13 +132,19 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
                 //represented by water
                 if(Objects.equals(board[r][c], "*")){
                     button.setGraphic(new ImageView(this.water));
+                    button.getProperties().put("TYPE","*");
                 }else if(Objects.equals(board[r][c], ".")){
                     button.setGraphic(new ImageView(this.lillyPad));
+                    button.getProperties().put("TYPE",".");
                 }else if(Objects.equals(board[r][c], "G")){
                     button.setGraphic(new ImageView(this.greenFrog));
+                    button.getProperties().put("TYPE","G");
                 }else if(Objects.equals(board[r][c], "R")){
                     button.setGraphic(new ImageView(this.redFrog));
+                    button.getProperties().put("TYPE","R");
                 }
+                //add button to row, col of the arr, for later updating
+                this.boardArr[r][c] = button;
                 //set size of the buttons
                 button.setMinSize(ICON_SIZE, ICON_SIZE);
                 button.setMaxSize(ICON_SIZE, ICON_SIZE);
@@ -139,9 +160,55 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
     }
 
     @Override
-    public void update(HoppersModel hoppersModel, String msg) {
+    public void update(HoppersModel hoppersModel, String msg){
+        //if a new file has been loaded, start again
+        if(msg.contains("Loaded:")){
+            try{
+                start(this.stage);
+            } catch (Exception e) {
+                System.out.println("Unable to locate file.");
+            }
 
+        }else{
+            //set label text to the message
+            label.setText(msg);
+        }
+        //set the label to the message sent, indicating state of the board
+        //if a new file has been loaded
+        if(msg.contains("Jumped")|| msg.equals("Puzzle reset!") || msg.contains("Next")){
+            updateBoard();
+
+        }
         this.stage.sizeToScene();  // when a different sized puzzle is loaded
+    }
+
+    private void updateBoard() {
+        //size of the board
+        int row = this.model.getCurrentConfig().getRow();
+        int col = this.model.getCurrentConfig().getCol();
+        //the game board of the current configuration
+        String[][] board = this.model.getCurrentConfig().getBoard();
+
+        for(int r = 0; r < row; r++){
+            for(int c = 0; c < col; c++){
+                Button button = (Button) boardArr[r][c];
+                //if the button property at r, c type is not equal to a symbol
+                //but the boards r, c is, change the button to the correct graphic
+                if(!button.getProperties().get("TYPE").equals("*") && Objects.equals(board[r][c], "*")){
+                    button.setGraphic(new ImageView(this.water));
+                    button.getProperties().put("TYPE","*");
+                }else if(!button.getProperties().get("TYPE").equals(".") && Objects.equals(board[r][c], ".")){
+                    button.setGraphic(new ImageView(this.lillyPad));
+                    button.getProperties().put("TYPE",".");
+                }else if(!button.getProperties().get("TYPE").equals("G") && Objects.equals(board[r][c], "G")){
+                    button.setGraphic(new ImageView(this.greenFrog));
+                    button.getProperties().put("TYPE","G");
+                }else if(!button.getProperties().get("TYPE").equals("R") && Objects.equals(board[r][c], "R")){
+                    button.setGraphic(new ImageView(this.redFrog));
+                    button.getProperties().put("TYPE","R");
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {

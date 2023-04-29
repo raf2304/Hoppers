@@ -57,7 +57,8 @@ public class HoppersModel {
     {
         //check if this current configuration is a solution
         if(this.currentConfig.isSolution()){
-            this.alertObservers("\nPuzzle already solved!");
+            System.out.println("\n");
+            this.alertObservers("Puzzle already solved!");
         }else{
             //create a solver object
             Solver solver = new Solver();
@@ -67,11 +68,13 @@ public class HoppersModel {
             if(path != null){
                 Object[] arrPath = path.toArray();
                 this.currentConfig = (HoppersConfig)arrPath[arrPath.length - 2];
-                this.alertObservers(this.currentConfig.toString() + "\nNext step!");
+                System.out.println(this.currentConfig.toString() + "\n");
+                this.alertObservers( "Next step!");
 
             }else{
                 //no path, indicate there is no solution
-                this.alertObservers("\nNo solution");
+                System.out.println("\n");
+                this.alertObservers("No solution");
             }
         }
 
@@ -120,9 +123,10 @@ public class HoppersModel {
                     //check if the move is a valid move, is the difference two
                     if(Math.abs(selectTo[0]-selectFrom[0]) == 2){
                         if(Math.abs(selectTo[1]-selectFrom[1]) == 2){
-                            this.alertObservers("Jumped from (" + selectFrom[0] + ", " + selectFrom[1] + ") to (" + r + ", " + c + ").");
                             //make the move and update the board
                             makeMove();
+                            this.alertObservers("Jumped from (" + selectFrom[0] + ", " + selectFrom[1] + ") to (" + r + ", " + c + ").");
+
                             selectFrom = null;
                             selectTo = null;
                         }
@@ -142,9 +146,9 @@ public class HoppersModel {
             if(!valid){
                 selectFrom = null;
                 selectTo = null;
-                this.alertObservers(" Selection cancelled.");
+                this.alertObservers("Not a valid move. Selection cancelled.");
             }else{
-                this.alertObservers(this.currentConfig.toString());
+                System.out.println(this.currentConfig.toString());
             }
         }else{
             this.alertObservers("Current board is a solution!");
@@ -169,8 +173,9 @@ public class HoppersModel {
      */
     public void reset() throws IOException {
         this.currentConfig = new HoppersConfig(this.filename);
-        this.alertObservers("Loaded: " + filename);
-        this.alertObservers(this.currentConfig.toString() + "\nPuzzle reset!");
+        System.out.println("Loaded: " + filename);
+        System.out.println(this.currentConfig.toString() + "\n");
+        this.alertObservers( "Puzzle reset!");
     }
 
     /**
