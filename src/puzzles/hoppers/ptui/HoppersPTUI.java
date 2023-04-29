@@ -30,15 +30,28 @@ public class HoppersPTUI implements Observer<HoppersModel, String> {
         System.out.println( "r(eset)             -- reset the current game" );
     }
 
-    public void run() {
+
+    public void run() throws IOException {
         Scanner in = new Scanner( System.in );
         for ( ; ; ) {
             System.out.print( "> " );
             String line = in.nextLine();
             String[] words = line.split( "\\s+" );
             if (words.length > 0) {
-                if (words[0].startsWith( "q" )) {
+                if(words[0].startsWith( "q" )) {
+                    //quit the game
                     break;
+                }else if(words[0].startsWith( "h" )) {
+                    //hint next move
+                    this.model.hint();
+                }else if(words[0].startsWith( "l" )) {
+                    //load new puzzle file
+                    this.model.load(words[1]);
+                }else if(words[0].startsWith( "r" )) {
+                    //reset the game
+                    this.model.reset();
+                }else if(words[0].startsWith( "s" )){
+                    this.model.select(Integer.parseInt(words[1]), Integer.parseInt(words[2]));
                 }
                 else {
                     displayHelp();
@@ -53,6 +66,7 @@ public class HoppersPTUI implements Observer<HoppersModel, String> {
         } else {
             try {
                 HoppersPTUI ptui = new HoppersPTUI();
+                System.out.println("Loaded: " + args[0]);
                 ptui.init(args[0]);
                 ptui.run();
             } catch (IOException ioe) {

@@ -31,18 +31,13 @@ public class Hoppers {
         }
         //print the arg values
         System.out.println("File: " + args[0]);
-        //create a hoppers config
-        HoppersConfig hoppersConfig = new HoppersConfig(args[0]);
-        //create a solver object
-        //Solver solver = new Solver();
-        //start solving
-        Collection<Configuration> path = hoppersConfig.getSuccessors();
-        for (Configuration config: path
-        ) {
-            System.out.println(config.toString() + "\n");
-        }
+        //create a starting hoppers config
+        HoppersConfig start = new HoppersConfig(args[0]);
+        //create a new solver
+        Solver solver = new Solver();
+        //start solver
+        Collection<Configuration> path = solver.solve(start);
 
-        /*
         System.out.println("Total Configs: " + solver.getTotalConfigs());
         System.out.print("Unique Configs: " + solver.getUniqueConfigs());
         if(path != null){
@@ -50,12 +45,12 @@ public class Hoppers {
             String pathStr = "";
             for (Configuration config:path
             ) {
-                pathStr = "\nStep " + step + ": " + config.toString() + pathStr;
+                pathStr = "\nStep " + step + ": \n" + config.toString() + pathStr;
                 step--;
             }
             System.out.println(pathStr);
         }else{
             System.out.println("\nNo solution");
-        }*/
+        }
     }
 }
