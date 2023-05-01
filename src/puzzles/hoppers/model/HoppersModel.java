@@ -4,6 +4,7 @@ import puzzles.common.Observer;
 import puzzles.common.solver.Configuration;
 import puzzles.common.solver.Solver;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 /**
@@ -89,7 +90,8 @@ public class HoppersModel {
     public void load(String filename){
         try {
             this.currentConfig = new HoppersConfig(filename);
-            this.alertObservers("Loaded: " + filename);
+            File f = new File(filename);
+            this.alertObservers("Loaded: " + f.getName());
         } catch (IOException ioe) {
             System.out.println(ioe.getMessage());
         }
@@ -177,7 +179,8 @@ public class HoppersModel {
      */
     public void reset() throws IOException {
         this.currentConfig = new HoppersConfig(this.filename);
-        System.out.println("Loaded: " + filename);
+        File f = new File(filename);
+        this.alertObservers("Loaded: " + f.getName());
         this.alertObservers( "Puzzle reset!");
     }
 

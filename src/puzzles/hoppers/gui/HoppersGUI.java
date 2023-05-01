@@ -86,7 +86,8 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         //holds label, board, and other buttons
         VBox screen = new VBox();
         //initialize the label of the state of the game
-        this.label = new Label("Loaded " + this.filename);
+        File f = new File(filename);
+        this.label = new Label("Loaded " + f.getName());
         this.label.setAlignment(Pos.CENTER);
         this.label.setFont(new Font(FONT_SIZE));
         //the playing board
@@ -227,16 +228,12 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         int col = this.model.getCurrentConfig().getCol();
         //the game board of the current configuration
         String[][] board = this.model.getCurrentConfig().getBoard();
-
         for(int r = 0; r < row; r++){
             for(int c = 0; c < col; c++){
                 Button button = (Button) boardArr[r][c];
                 //if the button property at r, c type is not equal to a symbol
                 //but the boards r, c is, change the button to the correct graphic
-                if(!button.getProperties().get("TYPE").equals("*") && Objects.equals(board[r][c], "*")){
-                    button.setGraphic(new ImageView(this.water));
-                    button.getProperties().put("TYPE","*");
-                }else if(!button.getProperties().get("TYPE").equals(".") && Objects.equals(board[r][c], ".")){
+                if(!button.getProperties().get("TYPE").equals(".") && Objects.equals(board[r][c], ".")){
                     button.setGraphic(new ImageView(this.lillyPad));
                     button.getProperties().put("TYPE",".");
                 }else if(!button.getProperties().get("TYPE").equals("G") && Objects.equals(board[r][c], "G")){
