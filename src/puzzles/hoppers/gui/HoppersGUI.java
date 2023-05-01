@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import puzzles.common.Observer;
 import puzzles.hoppers.model.HoppersModel;
@@ -41,7 +42,7 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
     //represents a spot that can be moved to
     private final Image lillyPad = new Image(Objects.requireNonNull(getClass().getResourceAsStream(RESOURCES_DIR + "lily_pad.png")));
     //represents a spot that cannot be moved to, *
-    private Image water = new Image(Objects.requireNonNull(getClass().getResourceAsStream(RESOURCES_DIR + "water.png")));
+    private final Image water = new Image(Objects.requireNonNull(getClass().getResourceAsStream(RESOURCES_DIR + "water.png")));
 
     private HoppersModel model;
     //the stage
@@ -87,6 +88,7 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
         //initialize the label of the state of the game
         this.label = new Label("Loaded " + this.filename);
         this.label.setAlignment(Pos.CENTER);
+        this.label.setFont(new Font(FONT_SIZE));
         //the playing board
         GridPane board = makeBoard();
         //the buttons load, reset, hint
@@ -134,7 +136,7 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
     }
 
     /**
-     * Make the intitial board GUI based off
+     * Make the initial board GUI based off
      * items at the models current configuration
      * @return GridPane of buttons representing each item on the board
      */
@@ -166,6 +168,7 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
                     button.setGraphic(new ImageView(this.redFrog));
                     button.getProperties().put("TYPE","R");
                 }
+                button.setFont(new Font(FONT_SIZE));
                 //add button to row, col of the arr, for later updating
                 this.boardArr[r][c] = button;
                 //set size of the buttons
@@ -185,7 +188,7 @@ public class HoppersGUI extends Application implements Observer<HoppersModel, St
      * Update the screen based on changes in the model
      * @param hoppersModel the object that wishes to inform this object
      *                about something that has happened.
-     * @param msg optional data the server.model can send to the observer
+     * @param msg optional data the server. Model can send to the observer
      *
      */
     @Override
